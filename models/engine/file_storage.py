@@ -78,3 +78,13 @@ class FileStorage:
             all_obj = self.all(cls)
             return all_obj.get(one_obj)
         return None
+
+    def get(self, cls, id):
+        """Returns the object based on the class and its ID,
+           or None if not found.
+        """
+        if cls and id:
+            one_obj = "{}.{}".format(cls, id)
+            all_obj = self.all(cls)
+            return all_obj.get(one_obj)
+        return None
