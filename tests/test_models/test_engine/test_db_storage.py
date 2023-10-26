@@ -86,3 +86,74 @@ class TestFileStorage(unittest.TestCase):
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_save(self):
         """Test that save properly saves objects to file.json"""
+
+
+@unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+class Test_Get_and_Count(unittest.TestCase):
+    """Unittests for get() and count() methods"""
+
+    @classmethod
+    def setUpClass(cls):
+        """sets up the class for this round of tests"""
+        models.storage.delete_all()
+        state = State(name="California")
+        city = City(state_id=state.id, name="San Francisco")
+        user = User(email="test@example.com", password="password")
+        place1 = Place(user_id=user.id,
+                       city_id=city.id,
+                       name="Tiny Cabin")
+        place2 = Place(user_id=user.id,
+                       city_id=city.id,
+                       name="Road Caravan")
+        amenity1 = Amenity(name="Wifi")
+        amenity2 = Amenity(name="Cable")
+        amenity3 = Amenity(name="Bucket Shower")
+        objs = [state, city, user, place1, place2, amenity1,
+                amenity2, amenity3]
+        for obj in objs:
+            obj.save()
+
+    def setUp(self):
+        """initializes new user for testing"""
+        self.state = Test_Get_and_Count.state
+        self.city = Test_Get_and_Count.city
+        self.user = Test_Get_and_Count.user
+        self.place1 = Test_Get_and_Count.place1
+        self.place2 = Test_Get_and_Count.place2
+        self.amenity1 = Test_Get_and_Count.amenity1
+        self.amenity2 = Test_Get_and_Count.amenity2
+        self.amenity3 = Test_Get_and_Count.amenity3
+
+    def test_all_reload_save(self):
+        """... checks if all(), save(), and reload function
+        in new instance.  This also tests for reload"""
+        actual = 0
+        db_objs = models.storage.all()
+        for obj in db_objs.values():
+            for x in [self.state.id, self.city.id, self.user.id,
+                      self.place1.id]:
+                if x == obj.id:
+                    actual += 1
+        self.assertTrue(actual == 4)
+
+    def test_get_place(self):
+        """... checks if get() function returns properly"""
+        duplicate = models.storage.get('Place', self.place1.id)
+        expected = self.place1.id
+        self.assertEqual(expected, duplicate.id)
+
+    def test_count_amenity(self):
+        """... checks if count() returns proper count with Class input"""
+        count_amenity = models.storage.count('Amenity')
+        expected = 3
+        self.assertEqual(expected, count_amenity)
+
+    def test_count_all(self):
+        """... checks if count() functions with no class"""
+        count_all = models.storage.count()
+        expected = 8
+        self.assertEqual(expected, count_all)
+
+
+if __name__ == "__main__":
+    unittest.main()
