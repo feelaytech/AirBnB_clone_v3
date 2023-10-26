@@ -1,3 +1,5 @@
-# Ignore below files and folders
+# Ignore the listed files & folders and all their contents.
 __pycache__/
+versions/
 file.json
+.vscode/
