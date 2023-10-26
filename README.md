@@ -155,12 +155,12 @@ No known bugs at this time.
 
 ## Authors
 Alexa Orrico - [Github](https://github.com/alexaorrico) / [Twitter](https://twitter.com/alexa_orrico)  
-Jennifer Huang - [Github](https://github.com/jhuang10123) / [Twitter](https://twitter.com/earthtojhuang)
-Felix Ayot - [Github](https://github.com/felixayot) / [Twitter](https://twitter.com/felix_ayot)
-Abraham Maiko - [Github](https://github.com/Freedom469) / [Twitter](https://twitter.com/BMalik254)
+Jennifer Huang - [Github](https://github.com/jhuang10123) / [Twitter](https://twitter.com/earthtojhuang)  
+Felix Ayot - [Github](https://github.com/felixayot) / [Twitter](https://twitter.com/felix_ayot)  
+Abraham Maiko - [Github](https://github.com/Freedom469) / [Twitter](https://twitter.com/BMalik254)  
 
 # AirBnB clone - RESTful API
-This section of AirBnB clone project was done by Felix and Abraham. We levereged Blueprint from Python flask web framework to build a RESTful API for our AirBnB clone website. Through this API, users are able to make tailored queries to our database for various class objects and get results in JSON format.
+This section of AirBnB clone project was done by Felix and Abraham. We levereged `Blueprint` class from Python `flask` web framework to build a RESTful API for our AirBnB clone website. Through this API, users are able to make tailored queries to our database for various class objects and get results in JSON format `{  }`.
 
 ## License
 Public Domain. No copyright protection.
