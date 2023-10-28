@@ -45,5 +45,5 @@ def states_with_id(state_id=None):
         req_json = request.get_json()
         if req_json is None:
             abort(400, "Not a JSON")
-        state_obj.bm_update(req_json)
+        state_obj.base_model_abstract(req_json)
         return jsonify(state_obj.to_dict())

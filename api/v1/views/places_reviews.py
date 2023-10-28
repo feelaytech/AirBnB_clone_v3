@@ -69,5 +69,5 @@ def reviews_with_id(review_id=None):
         req_json = request.get_json()
         if req_json is None:
             abort(400, "Not a JSON")
-        review_obj.bm_update(req_json)
+        review_obj.base_model_abstract(req_json)
         return make_response(jsonify(review_obj.to_json()), 200)

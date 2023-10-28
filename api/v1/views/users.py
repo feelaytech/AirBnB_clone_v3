@@ -51,5 +51,5 @@ def user_with_id(user_id=None):
         req_json = request.get_json()
         if req_json is None:
             abort(400, "Not a JSON")
-        user_obj.bm_update(req_json)
+        user_obj.base_model_abstract(req_json)
         return make_response(jsonify(user_obj.to_dict()), 200)

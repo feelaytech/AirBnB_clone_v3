@@ -56,5 +56,5 @@ def cities_with_id(city_id=None):
         req_json = request.get_json()
         if req_json is None:
             abort(400, "Not a JSON")
-        city_obj.bm_update(req_json)
+        city_obj.base_model_abstract(req_json)
         return make_response(jsonify(city_obj.to_dict()), 200)
