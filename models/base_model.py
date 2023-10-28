@@ -65,7 +65,7 @@ class BaseModel:
             for key, value in updated_dict.items():
                 setattr(self, key, value)
             self.save()
-    
+
     def save(self):
         """updates the attribute 'updated_at' with the current datetime"""
         self.updated_at = datetime.utcnow()
