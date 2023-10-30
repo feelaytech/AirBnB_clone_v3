@@ -4,8 +4,6 @@ from api.v1.views import app_views
 from flask import jsonify, make_response, request, abort
 from models import storage, storage_t
 from models.place import Place
-from models.city import City
-from models.amenity import Amenity
 
 
 @app_views.route("/cities/<city_id>/places", methods=["GET", "POST"])
@@ -13,12 +11,12 @@ def places_per_city(city_id=None):
     """Returns the list of all Place objects of a City and
        Creates a Place, all by using a given city id.
     """
-    city_obj = storage.get(City, city_id)
+    city_obj = storage.get("City", city_id)
     if city_obj is None:
-        abort(404, "Not found")
+        abort(404)
 
     if request.method == "GET":
-        all_places = storage.all(Place)
+        all_places = storage.all("Place")
         city_places = [obj.to_dict() for obj in all_places.values()
                        if obj.city_id == city_id]
         return jsonify(city_places)
@@ -35,9 +33,8 @@ def places_per_city(city_id=None):
             abort(404, "Not found")
         if req_json.get("name") is None:
             abort(400, "Missing name")
-        place = storage.get(Place)
         req_json["city_id"] = city_id
-        new_object = place(**req_json)
+        new_object = Place(**req_json)
         new_object.save()
         return make_response(jsonify(new_object.to_dict()), 201)
 
@@ -47,16 +44,16 @@ def places_with_id(place_id=None):
     """Returns a Place object, Deletes a Place object and
        Updates a Place object, all by a given place id.
     """
-    place_obj = storage.get(Place, place_id)
+    place_obj = storage.get("Place", place_id)
     if place_obj is None:
-        abort(404, "Not found")
+        abort(404)
 
     if request.method == "GET":
         return jsonify(place_obj.to_dict())
 
     if request.method == "DELETE":
-        place_obj.delete()
-        del place_obj
+        storage.delete(place_obj)
+        storage.save()
         return make_response(jsonify({}), 200)
 
     if request.method == "PUT":
@@ -72,13 +69,13 @@ def places_search():
     """Endpoint to retrieve all Place objects
        depending on the JSON in the body of the request.
     """
-    all_places = [p for p in storage.all(Place).values()]
+    all_places = [p for p in storage.all("Place").values()]
     req_json = request.get_json()
     if req_json is None:
         abort(400, "Not a JSON")
     states = req_json.get("states")
     if states and len(states) > 0:
-        all_cities = storage.all(City)
+        all_cities = storage.all("City")
         state_cities = set([city.id for city in all_cities.values()
                             if city.state_id in states])
     else:
@@ -86,7 +83,7 @@ def places_search():
     cities = req_json.get("cities")
     if cities and len(cities) > 0:
         cities = set([
-            c_id for c_id in cities if storage.get(City, c_id)])
+            c_id for c_id in cities if storage.get("City", c_id)])
         state_cities = state_cities.union(cities)
     amenities = req_json.get("amenities")
     if len(state_cities) > 0:
@@ -97,7 +94,7 @@ def places_search():
     places_amenities = []
     if amenities and len(amenities) > 0:
         amenities = set([
-            a_id for a_id in amenities if storage.get(Amenity, a_id)])
+            a_id for a_id in amenities if storage.get("Amenity", a_id)])
         for p in all_places:
             p_amenities = None
             if storage_t == "db" and p.amenities:

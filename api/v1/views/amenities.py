@@ -3,7 +3,6 @@
 from api.v1.views import app_views
 from flask import jsonify, make_response, request, abort
 from models import storage
-from models.amenity import Amenity
 
 
 @app_views.route("/amenities/", methods=["GET", "POST"])
@@ -12,7 +11,7 @@ def amenities_no_id(amenity_id=None):
        creates an Amenity object.
     """
     if request.method == "GET":
-        all_amenities = storage.all(Amenity)
+        all_amenities = storage.all("Amenity")
         all_amenities = [obj.to_dict() for obj in all_amenities.values()]
         return jsonify(all_amenities)
 
@@ -22,8 +21,8 @@ def amenities_no_id(amenity_id=None):
             abort(400, "Not a JSON")
         if req_json.get("name") is None:
             abort(400, "Missing name")
-        amenity = storage.get(Amenity)
-        new_object = Amenity(**req_json)
+        amenity = storage.get("Amenity")
+        new_object = amenity(**req_json)
         new_object.save()
         return make_response(jsonify(new_object.to_dict()), 201)
 
@@ -33,7 +32,7 @@ def amenities_with_id(amenity_id=None):
     """Returns an Amenity object, Deletes an Amenity object and
        Updates an Amenity object, all by a given id.
     """
-    amenity_obj = storage.get(Amenity, amenity_id)
+    amenity_obj = storage.get("Amenity", amenity_id)
     if amenity_obj is None:
         abort(404, "Not found")
 
@@ -41,8 +40,8 @@ def amenities_with_id(amenity_id=None):
         return jsonify(amenity_obj.to_dict())
 
     if request.method == "DELETE":
-        amenity_obj.delete()
-        del amenity_obj
+        storage.delete(amenity_obj)
+        storage.save()
         return make_response(jsonify({}), 200)
 
     if request.method == "PUT":

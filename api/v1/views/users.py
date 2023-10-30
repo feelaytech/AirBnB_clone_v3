@@ -12,7 +12,7 @@ def users_no_id(user_id=None):
        Creates a User object.
     """
     if request.method == "GET":
-        all_users = storage.all(User)
+        all_users = storage.all("User")
         all_users = [obj.to_dict() for obj in all_users.values()]
         return jsonify(all_users)
 
@@ -24,8 +24,7 @@ def users_no_id(user_id=None):
             abort(400, "Missing email")
         if req_json.get("password") is None:
             abort(400, "Missing password")
-        user = storage.get(User)
-        new_object = user(**req_json)
+        new_object = User(**req_json)
         new_object.save()
         return make_response(jsonify(new_object.to_dict()), 201)
 
@@ -35,7 +34,7 @@ def user_with_id(user_id=None):
     """Returns a User object, Deletes a User object and
        Updates a User object, all by a given id.
     """
-    user_obj = storage.get(User, user_id)
+    user_obj = storage.get("User", user_id)
     if user_obj is None:
         abort(404, "Not found")
 
@@ -43,8 +42,8 @@ def user_with_id(user_id=None):
         return jsonify(user_obj.to_dict())
 
     if request.method == "DELETE":
-        user_obj.delete()
-        del user_obj
+        storage.delete(user_obj)
+        storage.save()
         return make_response(jsonify({}), 200)
 
     if request.method == "PUT":

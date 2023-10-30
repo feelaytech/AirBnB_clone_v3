@@ -3,8 +3,6 @@
 from api.v1.views import app_views
 from flask import jsonify, make_response, request, abort
 from models import storage, storage_t
-from models.place import Place
-from models.amenity import Amenity
 
 
 @app_views.route("/places/<place_id>/amenities", methods=["GET"])
@@ -12,19 +10,18 @@ def amenities_per_place(place_id=None):
     """Returns the list of all Amenity objects of a Place
        by a given place id.
     """
-    place_obj = storage.get(Place, place_id)
+    place_obj = storage.get("Place", place_id)
 
     if request.method == "GET":
         if place_obj is None:
             abort(404, "Not found")
-        all_amenities = storage.all(Amenity)
         if storage_t == "db":
             place_amenities = place_obj.amenities
         else:
             place_amen_ids = place_obj.amenities
             place_amenities = []
             for am in place_amen_ids:
-                response.append(storage.get(Amenity, am))
+                response.append(storage.get("Amenity", am))
         place_amenities = [
             obj.to_dict() for obj in place_amenities
             ]
@@ -37,8 +34,8 @@ def amenity_to_place(place_id=None, amenity_id=None):
     """Deletes an Amenity object to a Place,
        Links an Amenity object to a Place, all by a given Amenity id.
     """
-    place_obj = storage.get(Place, place_id)
-    amenity_obj = storage.get(Amenity, amenity_id)
+    place_obj = storage.get("Place", place_id)
+    amenity_obj = storage.get("Amenity", amenity_id)
     if place_obj is None:
         abort(404, "Not found")
     if amenity_obj is None:
