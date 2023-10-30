@@ -38,4 +38,4 @@ class User(BaseModel, Base):
         hash = hashlib.md5()
         hash.update(pwd.encode("utf-8"))
         hashed_password = hash.hexdigest()
-        setattr(self, "password", hashed_password)
+        super().__setattr__(self, "password", hashed_password)
